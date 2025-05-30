@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gửi cậu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body,
+        html {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            display: flex;
+            background-color: #fd7b97;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Merriweather', serif;
+            font-weight: bold;
+            overflow: hidden;
+            flex-direction: column;
+            text-align: center;
+            position: relative;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        #btn {
+            cursor: pointer;
+            background-color: #ce4f6a00;
+            color: rgba(255, 255, 255, 0);
+            border: none;
+            border-radius: 10px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0);
+            transition: opacity 0.3s ease;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #btnYes,
+        #btnNo {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #ce4f6a;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            transition: all 0.3s ease-in-out;
+            margin: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-family: 'Merriweather', serif;
+            font-weight: bold;
+        }
+
+        h1,
+        p {
+            color: #ffffff;
+            transition: opacity 0.3s ease;
+            font-family: 'Times New Roman', 'Arial', sans-serif;
+        }
+
+        a {
+            color: #f86f6f;
+            transition: opacity 0.3s ease;
+            font-family: 'Times New Roman', 'Arial', sans-serif;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .show {
+            opacity: 1;
+        }
+
+        #btn img {
+            width: 60px;
+            height: 40px;
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            50% {
+                transform: translateX(5px);
+            }
+
+            75% {
+                transform: translateX(-5px);
+            }
+
+            100% {
+                transform: translateX(5px);
+            }
+        }
+
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        #btn:hover {
+            background-color: #d37da800;
+            transform: translateY(-4px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0);
+        }
+
+        #btnYes:hover,
+        #btnNo:hover {
+            background-color: #d37da8;
+            transform: translateY(-4px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        #btn:active,
+        #btnYes:active,
+        #btnNo:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .message {
+            display: none;
+            font-size: 20px;
+            margin: 10px;
+            padding: 30px;
+            border: 2px solid #f19fb3;
+            border-radius: 8px;
+            background-color: #ffffff;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            transform: perspective(500px) rotateY(10deg);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .message.show {
+            transform: perspective(500px) rotateY(0deg);
+        }
+
+        #yesImage {
+            width: 100%;
+            max-width: 85px;
+            padding: 15px;
+        }
+
+        .div-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            max-width: 100%;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .message-text {
+            font-size: 18px;
+            display: block;
+            padding: 30px;
+            border: 2px solid #f19fb3;
+            border-radius: 10px;
+            background-color: #ffffff;
+            text-align: center;
+            margin-bottom: 30px;
+            transform: perspective(500px) rotateY(10deg);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .message-text.show {
+            margin: 10px;
+            transform: perspective(500px) rotateY(0deg);
+        }
+
+        #messageBox {
+            display: none;
+            font-size: 22px;
+            margin: 10px;
+            padding: 30px;
+            border: 2px solid #f19fb3;
+            border-radius: 8px;
+            background-color: #ffffff;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            overflow: hidden;
+            word-wrap: break-word;
+            transform: perspective(500px) rotateY(10deg);
+            transition: all 0.3s ease-in-out;
+        }
+
+        #messageBox.show {
+            transform: perspective(500px) rotateY(0deg);
+        }
+
+        textarea {
+            padding: 10px;
+            font-size: 16px;
+            width: 80%;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
+            background-color: #ce4f6a;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-family: 'Merriweather', serif;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #d37da8;
+        }
+
+        button:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .status-message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+    </style>
+</head>
+
+<body id="playBtn" onclick="audio">
+    <audio id="audio" src="./p1.mp3"></audio>
+    <div>
+        <h1 id="messageTitle">Bạn có tin nhắn quan trọng</h1>
+        <p id="messageText">Xem ngay</p>
+        <button id="btn">
+            <img src="./letters.png" alt="Description">
+        </button>
+        <div class="message">Hi cậu,</div>
+        <div class="message">Đầu tiên, cảm ơn cậu rất nhiều vì đã đọc lá thư này.</div>
+        <div class="message">Tớ có một điều muốn nói, nhưng không biết bắt đầu từ đâu.</div>
+        <div class="message">Cậu đồng ý...</div>
+
+        <div id="msgYes" class="message-text" style="display: none;"><img id="yesImage"
+                src="https://i.pinimg.com/originals/dc/b9/6f/dcb96f174bb3e9615a4f7d5e9e161f14.gif" alt="Description">
+            Cậu đồng ý làm người yêu tớ nhaaaa 💕</div>
+        <div class="div-buttons">
+            <button id="btnYes" style="display: none;">Đồng ý</button>
+            <button id="btnNo" style="display: none;">Không</button>
+        </div>
+
+        <div id="messageBox" class="message-text hide">
+            <a>Tớ biết mà! Viết lời nhắn của cậu vào đây:</a>
+            <textarea id="userMessage" rows="4" cols="50" placeholder="Nhập lời nhắn của bạn..."></textarea><br>
+            <button id="btnSend">Gửi cậu</button>
+            <div id="statusMessage" class="status-message" style="display: none;"></div>
+        </div>
+    </div>
+    <script>
+        const API_URL = 'https://tram-3.onrender.com';
+
+        document.body.addEventListener("click", function () {
+            var audio = document.getElementById("audio");
+            audio.play();
+        });
+
+        const btn = document.getElementById("btn");
+        const btnYes = document.getElementById("btnYes");
+        const btnNo = document.getElementById("btnNo");
+        const msgYes = document.getElementById("msgYes");
+        const messages = document.querySelectorAll(".message");
+        const messageTitle = document.getElementById("messageTitle");
+        const messageText = document.getElementById("messageText");
+
+        let currentMessage = 0;
+
+        btn.addEventListener("click", () => {
+            messageTitle.classList.add("hide");
+            messageText.classList.add("hide");
+            btn.classList.add("hide");
+            showNextMessage();
+        });
+
+        // Cấu hình tốc độ hiển thị tin nhắn (mili giây)
+        const MESSAGE_DISPLAY_SPEED = 2000; // 2 giây (có thể thay đổi: 1000 = 1 giây, 5000 = 5 giây)
+
+        function showNextMessage() {
+            if (currentMessage < messages.length) {
+                const currentElement = messages[currentMessage];
+                currentElement.style.display = "block";
+                currentElement.classList.add("show");
+                currentMessage++;
+
+                setTimeout(() => {
+                    if (currentMessage > 0) {
+                        const prevElement = messages[currentMessage - 1];
+                        prevElement.classList.remove("show");
+                        prevElement.style.display = "none";
+                    }
+                    showNextMessage();
+                }, MESSAGE_DISPLAY_SPEED);
+            } else {
+                msgYes.style.display = "block";
+                msgYes.classList.add("show");
+                btnYes.style.display = "inline-block";
+                btnNo.style.display = "inline-block";
+                const yesImage = document.getElementById("yesImage");
+                yesImage.style.display = "block";
+            }
+        }
+
+        // GitHub configuration - Bạn cần thay đổi những thông tin này
+        const GITHUB_CONFIG = {
+            owner: 'Honghanhi',        // Tên GitHub của bạn
+            repo: 'TRAM',                // Tên repository
+            token: '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',           // GitHub Personal Access Token
+            filePath: 'messages.txt'              // Đường dẫn file trong repo
+        };
+
+        // Function to save data to GitHub
+        async function saveToGitHub(data) {
+            try {
+                const logEntry = `${data.timestamp} - ${data.status}: ${data.message || data.userMessage || ''}\n`;
+                
+                // Lấy nội dung file hiện tại từ GitHub
+                let currentContent = '';
+                let fileSha = null;
+                
+                try {
+                    const getResponse = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`, {
+                        headers: {
+                            'Authorization': `token ${GITHUB_CONFIG.token}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    });
+                    
+                    if (getResponse.ok) {
+                        const fileData = await getResponse.json();
+                        currentContent = atob(fileData.content);
+                        fileSha = fileData.sha;
+                    }
+                } catch (error) {
+                    console.log('File chưa tồn tại, sẽ tạo mới');
+                }
+                
+                // Nội dung mới = nội dung cũ + dòng mới
+                const newContent = currentContent + logEntry;
+                const encodedContent = btoa(unescape(encodeURIComponent(newContent)));
+                
+                // Tạo commit message
+                const commitMessage = `Update messages: ${data.status} at ${new Date().toLocaleString()}`;
+                
+                // Payload để gửi lên GitHub
+                const payload = {
+                    message: commitMessage,
+                    content: encodedContent
+                };
+                
+                if (fileSha) {
+                    payload.sha = fileSha; // Cần SHA để update file
+                }
+                
+                // Gửi lên GitHub
+                const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${GITHUB_CONFIG.token}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (response.ok) {
+                    console.log('✅ Đã lưu thành công lên GitHub!');
+                    return { success: true };
+                } else {
+                    const error = await response.json();
+                    throw new Error(`GitHub API Error: ${error.message}`);
+                }
+                
+            } catch (error) {
+                console.error('❌ Lỗi khi lưu lên GitHub:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // Function to send data to server
+        async function sendToServer(data) {
+            try {
+                // Lưu lên GitHub
+                const githubResult = await saveToGitHub(data);
+                
+                if (githubResult.success) {
+                    console.log('📁 Dữ liệu đã được lưu lên GitHub');
+                } else {
+                    console.error('❌ Không thể lưu lên GitHub:', githubResult.error);
+                }
+                
+                // Vẫn gửi lên server như bình thường
+                const response = await fetch(`${API_URL}/api/love-response`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                return { success: true, data: result };
+            } catch (error) {
+                console.error('Error sending to server:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // Function to show status message
+        function showStatusMessage(message, isSuccess) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.textContent = message;
+            statusDiv.className = `status-message ${isSuccess ? 'success' : 'error'}`;
+            statusDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        btnYes.addEventListener("click", async () => {
+            btnYes.style.display = "none";
+            btnNo.style.display = "none";
+            msgYes.style.display = "none";
+
+            // Send acceptance notification to server
+            const acceptanceData = {
+                status: 'accepted',
+                message: 'Đã đồng ý làm người yêu! 💕',
+                timestamp: new Date().toISOString()
+            };
+
+            const result = await sendToServer(acceptanceData);
+            
+            if (result.success) {
+                console.log('Acceptance sent successfully:', result.data);
+            } else {
+                console.error('Failed to send acceptance:', result.error);
+            }
+
+            const messageBox = document.getElementById("messageBox");
+            messageBox.classList.add("show");
+            messageBox.style.display = "block";
+        });
+
+        const btnSend = document.getElementById("btnSend");
+        btnSend.addEventListener("click", async () => {
+            const userMessage = document.getElementById("userMessage").value;
+            const btnSendElement = document.getElementById("btnSend");
+
+            if (userMessage.trim() !== "") {
+                // Show loading state
+                btnSendElement.textContent = "Đang gửi...";
+                btnSendElement.classList.add("loading");
+
+                // Prepare data to send
+                const messageData = {
+                    status: 'message_sent',
+                    userMessage: userMessage.trim(),
+                    timestamp: new Date().toISOString()
+                };
+
+                // Send to server
+                const result = await sendToServer(messageData);
+
+                // Reset button state
+                btnSendElement.textContent = "Gửi cậu";
+                btnSendElement.classList.remove("loading");
+
+                if (result.success) {
+                    showStatusMessage("Lời nhắn đã được gửi thành công! 💕", true);
+                    document.getElementById("userMessage").value = "";
+                    
+                    // Hide message box after successful send
+                    setTimeout(() => {
+                        document.getElementById("messageBox").classList.remove("show");
+                        document.getElementById("messageBox").style.display = "none";
+                    }, 2000);
+                } else {
+                    showStatusMessage("Có lỗi xảy ra khi gửi tin nhắn. Vui lòng thử lại!", false);
+                }
+            } else {
+                showStatusMessage("Vui lòng nhập lời nhắn trước khi gửi!", false);
+            }
+        });
+
+        const messagesForNo = [
+            "Cậu vừa bảo gì cơ",
+            "Cậu bảo không",
+            "Không thể không yêu nhau sao",
+            "Cảm ơn cậu đã nhận lời yêu tớ.",
+            "Xíu tớ qua đón đi chơi"
+        ];
+
+        let currentMessageForNo = 0;
+
+        btnNo.addEventListener("click", async () => {
+            // Send rejection notification to server
+            const rejectionData = {
+                status: 'rejected',
+                message: 'Đã nhấn từ chối (nhưng sẽ bị thuyết phục lại!) 😅',
+                timestamp: new Date().toISOString()
+            };
+
+            const result = await sendToServer(rejectionData);
+            
+            if (result.success) {
+                console.log('Rejection sent successfully:', result.data);
+            } else {
+                console.error('Failed to send rejection:', result.error);
+            }
+
+            changeMessageForNo();
+        });
+
+        // Cấu hình tốc độ hiển thị tin nhắn thuyết phục khi từ chối (mili giây)
+        const REJECTION_MESSAGE_SPEED = 2500; // 2.5 giây
+
+        function changeMessageForNo() {
+            if (currentMessageForNo < messagesForNo.length) {
+                msgYes.textContent = messagesForNo[currentMessageForNo];
+                msgYes.classList.add("show");
+
+                currentMessageForNo++;
+
+                if (currentMessageForNo < messagesForNo.length) {
+                    setTimeout(changeMessageForNo, REJECTION_MESSAGE_SPEED);
+                } else {
+                    setTimeout(async () => {
+                        // Send final acceptance notification when forced to accept
+                        const forcedAcceptanceData = {
+                            status: 'forced_acceptance',
+                            message: 'Cuối cùng cũng đồng ý sau khi bị thuyết phục! 😊💕',
+                            timestamp: new Date().toISOString()
+                        };
+
+                        const result = await sendToServer(forcedAcceptanceData);
+                        
+                        if (result.success) {
+                            console.log('Forced acceptance sent successfully:', result.data);
+                        } else {
+                            console.error('Failed to send forced acceptance:', result.error);
+                        }
+
+                        btnYes.click();
+                    }, REJECTION_MESSAGE_SPEED);
+                }
+            }
+        }
+
+        // Cấu hình tốc độ rung lắc của nút thư (mili giây)
+        const SHAKE_INTERVAL = 3000; // 3 giây rung 1 lần
+
+        setInterval(() => {
+            btn.classList.add("shake");
+
+            setTimeout(() => {
+                btn.classList.remove("shake");
+            }, 500);
+        }, SHAKE_INTERVAL);
+
+    </script>
+
+</body>
+
+</html>

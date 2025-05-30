@@ -237,11 +237,6 @@
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
 
-        .loading {
-            opacity: 0.6;
-            pointer-events: none;
-        }
-
         .status-message {
             margin-top: 10px;
             padding: 10px;
@@ -272,19 +267,15 @@
         <button id="btn">
             <img src="./letters.png" alt="Description">
         </button>
-        <div class="message">Hi cậu,</div>
-        <div class="message">Đầu tiên, cảm ơn cậu rất nhiều vì đã đọc lá thư này.</div>
-        <div class="message">Tớ có một điều muốn nói, nhưng không biết bắt đầu từ đâu.</div>
-        <div class="message">Cậu đồng ý...</div>
+        <div class="message">Hi Trâm,</div>
+        <div class="message">Đầu tiên, cảm ơn Trâm rất nhiều vì đã đọc lá thư này.</div>
+        <div class="message">Tớ có một điều muốn nói, rất lâu rồi.</div>
+        <div class="message">Tui thích Trâm...</div>
 
         <div id="msgYes" class="message-text" style="display: none;"><img id="yesImage"
                 src="https://i.pinimg.com/originals/dc/b9/6f/dcb96f174bb3e9615a4f7d5e9e161f14.gif" alt="Description">
-            Cậu đồng ý làm người yêu tớ nhaaaa 💕</div>
-        <div class="div-buttons">
-            <button id="btnYes" style="display: none;">Đồng ý</button>
-            <button id="btnNo" style="display: none;">Không</button>
-        </div>
-
+            Trâm đồng ý làm người yêu tuiui nhaaaa 💕</div>
+       
         <div id="messageBox" class="message-text hide">
             <a>Tớ biết mà! Viết lời nhắn của cậu vào đây:</a>
             <textarea id="userMessage" rows="4" cols="50" placeholder="Nhập lời nhắn của bạn..."></textarea><br>
@@ -318,7 +309,7 @@
         });
 
         // Cấu hình tốc độ hiển thị tin nhắn (mili giây)
-        const MESSAGE_DISPLAY_SPEED = 2000; // 2 giây (có thể thay đổi: 1000 = 1 giây, 5000 = 5 giây)
+        const MESSAGE_DISPLAY_SPEED = 2200; // 2 giây (có thể thay đổi: 1000 = 1 giây, 5000 = 5 giây)
 
         function showNextMessage() {
             if (currentMessage < messages.length) {
@@ -345,96 +336,12 @@
             }
         }
 
-        // GitHub configuration - Bạn cần thay đổi những thông tin này
-        const GITHUB_CONFIG = {
-            owner: 'Honghanhi',        // Tên GitHub của bạn
-            repo: 'TRAM',                // Tên repository
-            token: process.env.GITHUB_TOKEN,           // GitHub Personal Access Token
-            filePath: 'messages.txt'              // Đường dẫn file trong repo
-        };
-
-        // Function to save data to GitHub
+        // Function to save message to GitHub
         async function saveToGitHub(data) {
             try {
-                const logEntry = `${data.timestamp} - ${data.status}: ${data.message || data.userMessage || ''}\n`;
+                console.log('💾 Saving to GitHub:', data);
                 
-                // Lấy nội dung file hiện tại từ GitHub
-                let currentContent = '';
-                let fileSha = null;
-                
-                try {
-                    const getResponse = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`, {
-                        headers: {
-                            'Authorization': `token ${GITHUB_CONFIG.token}`,
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
-                    });
-                    
-                    if (getResponse.ok) {
-                        const fileData = await getResponse.json();
-                        currentContent = atob(fileData.content);
-                        fileSha = fileData.sha;
-                    }
-                } catch (error) {
-                    console.log('File chưa tồn tại, sẽ tạo mới');
-                }
-                
-                // Nội dung mới = nội dung cũ + dòng mới
-                const newContent = currentContent + logEntry;
-                const encodedContent = btoa(unescape(encodeURIComponent(newContent)));
-                
-                // Tạo commit message
-                const commitMessage = `Update messages: ${data.status} at ${new Date().toLocaleString()}`;
-                
-                // Payload để gửi lên GitHub
-                const payload = {
-                    message: commitMessage,
-                    content: encodedContent
-                };
-                
-                if (fileSha) {
-                    payload.sha = fileSha; // Cần SHA để update file
-                }
-                
-                // Gửi lên GitHub
-                const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${GITHUB_CONFIG.token}`,
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-                
-                if (response.ok) {
-                    console.log('✅ Đã lưu thành công lên GitHub!');
-                    return { success: true };
-                } else {
-                    const error = await response.json();
-                    throw new Error(`GitHub API Error: ${error.message}`);
-                }
-                
-            } catch (error) {
-                console.error('❌ Lỗi khi lưu lên GitHub:', error);
-                return { success: false, error: error.message };
-            }
-        }
-
-        // Function to send data to server
-        async function sendToServer(data) {
-            try {
-                // Lưu lên GitHub
-                const githubResult = await saveToGitHub(data);
-                
-                if (githubResult.success) {
-                    console.log('📁 Dữ liệu đã được lưu lên GitHub');
-                } else {
-                    console.error('❌ Không thể lưu lên GitHub:', githubResult.error);
-                }
-                
-                // Vẫn gửi lên server như bình thường
-                const response = await fetch(`${API_URL}/api/love-response`, {
+                const response = await fetch(`${API_URL}/api/save-github`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -447,9 +354,11 @@
                 }
 
                 const result = await response.json();
+                console.log('✅ GitHub save successful:', result);
                 return { success: true, data: result };
+                
             } catch (error) {
-                console.error('Error sending to server:', error);
+                console.error('❌ Error saving to GitHub:', error);
                 return { success: false, error: error.message };
             }
         }
@@ -471,19 +380,26 @@
             btnNo.style.display = "none";
             msgYes.style.display = "none";
 
-            // Send acceptance notification to server
+            // Save acceptance to GitHub
             const acceptanceData = {
                 status: 'accepted',
-                message: 'Đã đồng ý làm người yêu! 💕',
-                timestamp: new Date().toISOString()
+                message: '🎉 CHẤP NHẬN LÀM NGƯỜI YÊU! 💕 Người này đã đồng ý làm người yêu bạn rồi!',
+                action: 'love_accepted',
+                clientTimestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent,
+                timestamp: new Date().toISOString(),
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                url: window.location.href,
+                referrer: document.referrer || 'direct',
+                formattedTime: new Date().toLocaleString('vi-VN')
             };
 
-            const result = await sendToServer(acceptanceData);
+            const result = await saveToGitHub(acceptanceData);
             
             if (result.success) {
-                console.log('Acceptance sent successfully:', result.data);
+                console.log('✅ Acceptance saved to GitHub successfully:', result.data);
             } else {
-                console.error('Failed to send acceptance:', result.error);
+                console.error('❌ Failed to save acceptance to GitHub:', result.error);
             }
 
             const messageBox = document.getElementById("messageBox");
@@ -501,22 +417,32 @@
                 btnSendElement.textContent = "Đang gửi...";
                 btnSendElement.classList.add("loading");
 
-                // Prepare data to send
+                // Prepare data to save to GitHub
                 const messageData = {
                     status: 'message_sent',
                     userMessage: userMessage.trim(),
-                    timestamp: new Date().toISOString()
+                    action: 'user_message',
+                    message: `💌 TIN NHẮN TỪ NGƯỜI YÊU: "${userMessage.trim()}"`,
+                    messageLength: userMessage.trim().length,
+                    clientTimestamp: new Date().toISOString(),
+                    userAgent: navigator.userAgent,
+                    timestamp: new Date().toISOString(),
+                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    url: window.location.href,
+                    referrer: document.referrer || 'direct',
+                    formattedTime: new Date().toLocaleString('vi-VN')
                 };
 
-                // Send to server
-                const result = await sendToServer(messageData);
+                // Save to GitHub
+                const result = await saveToGitHub(messageData);
 
                 // Reset button state
                 btnSendElement.textContent = "Gửi cậu";
                 btnSendElement.classList.remove("loading");
 
                 if (result.success) {
-                    showStatusMessage("Lời nhắn đã được gửi thành công! 💕", true);
+                    showStatusMessage("Lời nhắn đã được lưu thành công! 💕", true);
+                    console.log('✅ Message saved to GitHub successfully');
                     document.getElementById("userMessage").value = "";
                     
                     // Hide message box after successful send
@@ -525,7 +451,7 @@
                         document.getElementById("messageBox").style.display = "none";
                     }, 2000);
                 } else {
-                    showStatusMessage("Có lỗi xảy ra khi gửi tin nhắn. Vui lòng thử lại!", false);
+                    showStatusMessage("Có lỗi xảy ra khi lưu tin nhắn. Vui lòng thử lại!", false);
                 }
             } else {
                 showStatusMessage("Vui lòng nhập lời nhắn trước khi gửi!", false);
@@ -542,27 +468,13 @@
 
         let currentMessageForNo = 0;
 
-        btnNo.addEventListener("click", async () => {
-            // Send rejection notification to server
-            const rejectionData = {
-                status: 'rejected',
-                message: 'Đã nhấn từ chối (nhưng sẽ bị thuyết phục lại!) 😅',
-                timestamp: new Date().toISOString()
-            };
-
-            const result = await sendToServer(rejectionData);
-            
-            if (result.success) {
-                console.log('Rejection sent successfully:', result.data);
-            } else {
-                console.error('Failed to send rejection:', result.error);
-            }
-
+        btnNo.addEventListener("click", () => {
+            console.log(`Bị từ chối lần ${currentMessageForNo + 1}`);
             changeMessageForNo();
         });
 
         // Cấu hình tốc độ hiển thị tin nhắn thuyết phục khi từ chối (mili giây)
-        const REJECTION_MESSAGE_SPEED = 2500; // 2.5 giây
+        const REJECTION_MESSAGE_SPEED = 2200; // 2.55 giây
 
         function changeMessageForNo() {
             if (currentMessageForNo < messagesForNo.length) {
@@ -574,22 +486,8 @@
                 if (currentMessageForNo < messagesForNo.length) {
                     setTimeout(changeMessageForNo, REJECTION_MESSAGE_SPEED);
                 } else {
-                    setTimeout(async () => {
-                        // Send final acceptance notification when forced to accept
-                        const forcedAcceptanceData = {
-                            status: 'forced_acceptance',
-                            message: 'Cuối cùng cũng đồng ý sau khi bị thuyết phục! 😊💕',
-                            timestamp: new Date().toISOString()
-                        };
-
-                        const result = await sendToServer(forcedAcceptanceData);
-                        
-                        if (result.success) {
-                            console.log('Forced acceptance sent successfully:', result.data);
-                        } else {
-                            console.error('Failed to send forced acceptance:', result.error);
-                        }
-
+                    setTimeout(() => {
+                        console.log('Cuối cùng đã buộc phải chấp nhận! 😊💕');
                         btnYes.click();
                     }, REJECTION_MESSAGE_SPEED);
                 }
@@ -597,7 +495,7 @@
         }
 
         // Cấu hình tốc độ rung lắc của nút thư (mili giây)
-        const SHAKE_INTERVAL = 3000; // 3 giây rung 1 lần
+        const SHAKE_INTERVAL = 2500; // 3 giây rung 1 lần
 
         setInterval(() => {
             btn.classList.add("shake");
@@ -606,6 +504,11 @@
                 btn.classList.remove("shake");
             }, 500);
         }, SHAKE_INTERVAL);
+
+        // Log when page is visited
+        window.addEventListener('load', () => {
+            console.log('Trang web được truy cập lúc:', new Date().toLocaleString('vi-VN'));
+        });
 
     </script>
 
